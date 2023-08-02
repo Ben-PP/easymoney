@@ -1,20 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf_render/pdf_render.dart';
-import 'package:sqflite/sqflite.dart';
 
 import '../domain/receipt.dart';
 import '../data/receipt_repository.dart';
 
 /// Manages receipts which are not part of any invoice
 class ProviderReceipts with ChangeNotifier {
-  ProviderReceipts({required this.db});
-  Database db;
-
-  static const _receiptsTableName = 'receipts';
+  final ReceiptRepository _receiptRepository = ReceiptRepository();
   final List<Receipt> _receipts = [];
 
   /// Returns a list of all the Receipts
@@ -26,23 +18,8 @@ class ProviderReceipts with ChangeNotifier {
   /// Loads all Receipts from database
   Future<void> fetchReceipts() async {
     _receipts.clear();
-    _receipts.addAll(await ReceiptRepository(db: db).getReceipts());
+    _receipts.addAll(await _receiptRepository.getReceipts());
     notifyListeners();
-  }
-
-  /// Saves a receipt file of a Receipt
-  ///
-  /// Takes the [file] to be saved and the id of the receipt for which it
-  /// belongs to.
-  Future<String> saveReceiptFile(XFile file, int id) async {
-    final path = await _getPath();
-    if (!Directory(path).existsSync()) {
-      Directory(path).createSync();
-    }
-    final fileType = file.name.substring(file.name.lastIndexOf('.'));
-    await file.saveTo('$path/$id$fileType');
-
-    return '$id$fileType';
   }
 
   /// Adds a new Receipt
@@ -57,7 +34,8 @@ class ProviderReceipts with ChangeNotifier {
     required XFile file,
   }) async {
     final id = DateTime.now().millisecondsSinceEpoch;
-    final fileName = await saveReceiptFile(file, id);
+    final fileName = '$id${file.name.substring(file.name.lastIndexOf('.'))}';
+
     final receipt = Receipt(
       id: id,
       date: DateUtils.dateOnly(date),
@@ -66,17 +44,20 @@ class ProviderReceipts with ChangeNotifier {
       description: description,
       fileName: fileName,
     );
+
     _receipts.add(receipt);
-    await db.insert(_receiptsTableName, receipt.toMap());
+    // TODO Handle error
+    await _receiptRepository.addReceipt(receipt: receipt, file: file);
     notifyListeners();
+
     return receipt;
   }
 
-  /// Deletes a receipt with [id]
-  Future<void> deleteReceipt(int id) async {
+  /// Deletes a [receipt]
+  Future<void> deleteReceipt(Receipt receipt) async {
     try {
-      await db.delete('receipts', where: 'id=?', whereArgs: [id]);
-      _receipts.removeWhere((element) => element.id == id);
+      await _receiptRepository.deleteReceipt(receipt);
+      _receipts.removeWhere((element) => element.id == receipt.id);
       notifyListeners();
     } catch (e) {
       // TODO Handle errors
@@ -84,33 +65,10 @@ class ProviderReceipts with ChangeNotifier {
     }
   }
 
-  /// Returns a path where the receipt files will be saved.
-  Future<String> _getPath() async {
-    const String receiptPath = '/receipts';
-    final path =
-        '${(await getApplicationDocumentsDirectory()).path}$receiptPath';
-    if (!Directory(path).existsSync()) {
-      Directory(path).createSync();
-    }
-    return path;
-  }
-
   /// Returns the receipt file of a [receipt]
   Future<dynamic> getReceiptFile(Receipt receipt) async {
-    final path = await _getPath();
-    final file = XFile('$path/${receipt.fileName}');
     try {
-      final fileType = file.name.substring(file.name.lastIndexOf('.'));
-      switch (fileType) {
-        case '.jpg':
-          Image image = Image.file(File(file.path));
-          return image;
-        case '.pdf':
-          PdfDocument doc = await PdfDocument.openFile(file.path);
-          return doc;
-        default:
-          return Future.error(Exception('Incorrect filetype \'$fileType\''));
-      }
+      return await _receiptRepository.getReceiptFile(receipt.fileName);
       // TODO Catch different errors
     } catch (e) {
       // TODO Log

@@ -96,7 +96,7 @@ class _ReceiptRouteState extends State<ReceiptRoute> {
             ),
             ElevatedButton(
               onPressed: () {
-                providerReceipts.deleteReceipt(widget.receipt.id).then((value) {
+                providerReceipts.deleteReceipt(widget.receipt).then((value) {
                   Navigator.of(context).pop();
                   sendSnack(
                     context: context,
