@@ -7,6 +7,7 @@ import 'package:pdf_render/pdf_render.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../domain/receipt.dart';
+import '../data/receipt_repository.dart';
 
 /// Manages receipts which are not part of any invoice
 class ProviderReceipts with ChangeNotifier {
@@ -25,10 +26,7 @@ class ProviderReceipts with ChangeNotifier {
   /// Loads all Receipts from database
   Future<void> fetchReceipts() async {
     _receipts.clear();
-    final data = await db.query(_receiptsTableName);
-    for (var map in data) {
-      _receipts.add(Receipt.fromMap(map));
-    }
+    _receipts.addAll(await ReceiptRepository(db: db).getReceipts());
     notifyListeners();
   }
 
