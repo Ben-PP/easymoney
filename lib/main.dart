@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import './providers/provider_receipts.dart';
+import 'src/features/receipts/application/provider_receipts.dart';
 
-import './theme.dart';
-import './home_page.dart';
-import './database/database.dart';
+import 'src/theme.dart';
+import 'src/home_page.dart';
+import 'src/utils/database.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
