@@ -1,5 +1,7 @@
 ---
+layout: page
+title: Coding style & guidelines
+permalink: /guidelines/
 ---
-# Coding style & guidelines
 
 Coming soon! Basically follows standard flutter styling.

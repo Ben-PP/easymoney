@@ -129,26 +129,22 @@ Widget build(BuildContext context) {
       width: double.infinity,
       child: Column(
         children: [
-          _dataWidget(
-            context,
+          DataWidget(
             &#47;&#47; FIXME Localization
             title: &#39;Date:&#39;,
             content: invoice.dateOnly,
           ),
-          _dataWidget(
-            context,
+          DataWidget(
             &#47;&#47; FIXME Localization
             title: &#39;Reference:&#39;,
             content: invoice.target,
           ),
-          _dataWidget(
-            context,
+          DataWidget(
             &#47;&#47; FIXME Localization
             title: &#39;Invoicer:&#39;,
             content: invoice.name,
           ),
-          _dataWidget(
-            context,
+          DataWidget(
             &#47;&#47; FIXME Localization
             title: &#39;Amount:&#39;,
             content: &#39;${invoice.euros}€&#39;,

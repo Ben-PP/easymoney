@@ -8,6 +8,10 @@ title: Welcome to EasyMoney
 
 EasyMoney is an app to manage receipts and compose invoices.
 
+## Style and guidelines
+
+Before you contribute, study about the [coding conventions](guidelines/) used in this project.
+
 ## Docs
 
-Documentation can be found here: [documentation](./docs/index.html)
+For documentation, take a look at [Documentation](docs/) section.
