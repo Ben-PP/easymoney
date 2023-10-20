@@ -9,6 +9,80 @@ import './utils/open_url.dart';
 /// {@nodoc}
 class InfoRoute extends StatelessWidget {
   const InfoRoute({super.key});
+  static const List<Map<String, String>> _libraries = [
+    {
+      'name': 'Flutter',
+      'url': 'https://flutter.dev/',
+    },
+    {
+      'name': 'flutter_localizations',
+      'url': 'https://pub.dev/packages/flutter_localization',
+    },
+    {
+      'name': 'intl',
+      'url': 'https://pub.dev/packages/intl',
+    },
+    {
+      'name': 'sqflite',
+      'url': 'https://pub.dev/packages/sqflite',
+    },
+    {
+      'name': 'image_picker',
+      'url': 'https://pub.dev/packages/image_picker',
+    },
+    {
+      'name': 'path_provider',
+      'url': 'https://pub.dev/packages/path_provider',
+    },
+    {
+      'name': 'provider',
+      'url': 'https://pub.dev/packages/provider',
+    },
+    {
+      'name': 'pdf_render',
+      'url': 'https://pub.dev/packages/pdf_render',
+    },
+    {
+      'name': 'file_picker',
+      'url': 'https://pub.dev/packages/file_picker',
+    },
+    {
+      'name': 'path',
+      'url': 'https://pub.dev/packages/path',
+    },
+    {
+      'name': 'share_plus',
+      'url': 'https://pub.dev/packages/share_plus',
+    },
+    {
+      'name': 'after_layout',
+      'url': 'https://pub.dev/packages/after_layout',
+    },
+    {
+      'name': 'pdf',
+      'url': 'https://pub.dev/packages/pdf',
+    },
+    {
+      'name': 'package_info_plus',
+      'url': 'https://pub.dev/packages/package_info_plus',
+    },
+    {
+      'name': 'url_launcher',
+      'url': 'https://pub.dev/packages/url_launcher',
+    },
+  ];
+
+  List<Widget> _libraryBuilder(BuildContext context) {
+    final list = <Widget>[];
+    for (var package in _libraries) {
+      list.add(TextButton(
+          onPressed: () {
+            openUrl(package['url']!);
+          },
+          child: Text(package['name']!)));
+    }
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +152,11 @@ class InfoRoute extends StatelessWidget {
                   ),
                 ),
                 Text(
+                  //FIXME Localization
                   'Libraries used',
                   style: Theme.of(context).textTheme.titleLarge,
-                )
+                ),
+                ..._libraryBuilder(context),
               ],
             ),
           ),
