@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import './widgets/data_widget.dart';
@@ -86,11 +87,12 @@ class InfoRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locals = AppLocalizations.of(context);
     final packageInfo = PackageInfo.fromPlatform();
     return Scaffold(
       appBar: AppBar(
-        // FIXME Localization
-        title: const Text('About EasyMoney'),
+        title: Text(locals!.infoRouteTitle),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -106,9 +108,8 @@ class InfoRoute extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          // FIXME Localization
                           Text(
-                            'Want to contribute?',
+                            locals.infoRouteContribute,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           Padding(
@@ -133,16 +134,15 @@ class InfoRoute extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // FIXME Localization
-                      const DataWidget(
-                          title: 'Developer', content: 'Karel Parkkola'),
+                      DataWidget(
+                          title: locals.infoRouteDeveloper,
+                          content: 'Karel Parkkola'),
                       FutureBuilder(
                           future: packageInfo,
                           builder: (BuildContext context,
                               AsyncSnapshot<PackageInfo> snapshot) {
                             return DataWidget(
-                              // FIXME Localization
-                              title: 'Version',
+                              title: locals.infoRouteVersion,
                               content: snapshot.hasData
                                   ? snapshot.data!.version
                                   : '',
@@ -152,8 +152,7 @@ class InfoRoute extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  //FIXME Localization
-                  'Libraries used',
+                  locals.infoRouteLibraries,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 ..._libraryBuilder(context),
