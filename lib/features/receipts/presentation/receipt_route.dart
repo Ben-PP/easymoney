@@ -8,6 +8,7 @@ import 'show_jpg_dialog.dart';
 //import '../../../utils/show_pdf_dialog.dart';
 import '../../snacks/snacks.dart';
 import '../../../widgets/data_widget.dart';
+import '../../../widgets/confirm_dialog.dart';
 
 /// Route for showing a single Receipt
 ///
@@ -134,8 +135,7 @@ class _ReceiptRouteState extends State<ReceiptRoute> {
               _description(
                   title: locals.description,
                   content: widget.receipt.description),
-              // FIXME Localization
-              DataWidget(title: 'Minute', content: widget.receipt.minute),
+              DataWidget(title: locals.minute, content: widget.receipt.minute),
               Text(
                 locals.file,
                 style: Theme.of(context).textTheme.displaySmall,
@@ -151,7 +151,19 @@ class _ReceiptRouteState extends State<ReceiptRoute> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  final confirmation = await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ConfirmDialog(
+                          child: Text(
+                            locals.receiptRouteConfirmDeleteText,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        );
+                      });
+                  if (confirmation == null) return;
+                  if (!confirmation) return;
                   providerReceipts.deleteReceipt(widget.receipt).then((value) {
                     Navigator.of(context).pop();
                     sendSnack(
