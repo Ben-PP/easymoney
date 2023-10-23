@@ -46,8 +46,7 @@ class _ReceiptRouteState extends State<ReceiptRoute> {
     try {
       final file = await providerReceipts.getReceiptImage(widget.receipt);
       switch (file.runtimeType) {
-        // FIXME Figure out what this means
-        case Image:
+        case == Image:
           if (context.mounted) {
             showDialog(
               context: context,
@@ -76,7 +75,6 @@ class _ReceiptRouteState extends State<ReceiptRoute> {
           break;
       }
     } catch (e) {
-      // TODO Show error snackbar
       debugPrint(e.toString());
     }
   }

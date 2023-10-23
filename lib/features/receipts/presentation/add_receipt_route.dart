@@ -103,7 +103,6 @@ class _AddReceiptRouteState extends State<AddReceiptRoute> {
           break;
       }
     } catch (e) {
-      // TODO Show error snackbar
       debugPrint(e.toString());
     }
   }
@@ -142,7 +141,6 @@ class _AddReceiptRouteState extends State<AddReceiptRoute> {
       try {
         amount = double.parse(amountTextController.text.trim());
       } catch (e) {
-        // TODO Handle error
         return Future.error(e);
       }
     }
@@ -162,7 +160,9 @@ class _AddReceiptRouteState extends State<AddReceiptRoute> {
       }
       return result;
     } catch (e) {
-      // TODO Handle errors
+      if (context.mounted) {
+        sendSnack(context: context, content: 'Oops, something went wrong...');
+      }
       return Future.error(e);
     }
   }
@@ -284,7 +284,6 @@ class _AddReceiptRouteState extends State<AddReceiptRoute> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(locals.addReceiptRouteUploadHelp),
                   ),
-                  // TODO Show the receipt file
                   if (file != null)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -319,7 +318,10 @@ class _AddReceiptRouteState extends State<AddReceiptRoute> {
                           setState(() async {
                             file = result;
                           });
-                          // TODO Throw error for incorrect filetype
+                          // TODO Support for HEIC so apple users can be happy
+                          if (!file!.name.endsWith('.jpg')) {
+                            throw Exception('incorrect-filetype');
+                          }
                           break;
                         // TODO Add support for pdf
                         /*case UploadType.pdf:
