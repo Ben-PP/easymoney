@@ -9,12 +9,13 @@ import 'package:pdf_render/pdf_render.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/show_pdf_dialog.dart';
+import '../../../utils/file_operations.dart';
 import '../../../widgets/info_dialog.dart';
 import '../../snacks/snacks.dart';
 import '../application/provider_receipts.dart';
 import '../domain/receipt.dart';
 import 'pic_or_pdf_dialog.dart';
-import 'show_jpg_dialog.dart';
+import 'show_image_dialog.dart';
 
 /// Route for adding a new receipt
 ///
@@ -79,7 +80,7 @@ class _AddReceiptRouteState extends State<AddReceiptRoute> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return ShowJpgDialog(
+                return ShowImageDialog(
                   title: locals.addReceiptRouteFilePreview,
                   image: Image.file(File(file!.path)),
                 );
@@ -315,14 +316,15 @@ class _AddReceiptRouteState extends State<AddReceiptRoute> {
                         case UploadType.picture:
                           final result = await picker.pickImage(
                               source: ImageSource.gallery);
-                          setState(() async {
+                          setState(() {
                             file = result;
                           });
                           // TODO Support for HEIC so apple users can be happy
-                          if (!file!.name.endsWith('.jpg')) {
-                            throw Exception('incorrect-filetype');
+                          if (isAcceptedType(
+                              Receipt.acceptedFileTypes, file!.name)) {
+                            break;
                           }
-                          break;
+                          throw Exception('incorrect-filetype');
                         // TODO Add support for pdf
                         /*case UploadType.pdf:
                           FilePickerResult? result =

@@ -81,7 +81,7 @@ class ReceiptRepository {
     try {
       final fileType = file.name.substring(file.name.lastIndexOf('.'));
       switch (fileType) {
-        case '.jpg':
+        case '.jpg' || '.png':
           Image image = Image.file(File(file.path));
           return image;
         // TODO Support pdf files

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../application/provider_receipts.dart';
 import '../domain/receipt.dart';
-import 'show_jpg_dialog.dart';
+import 'show_image_dialog.dart';
 //import '../../../utils/show_pdf_dialog.dart';
 import '../../snacks/snacks.dart';
 import '../../../widgets/data_widget.dart';
@@ -51,7 +51,7 @@ class _ReceiptRouteState extends State<ReceiptRoute> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return ShowJpgDialog(
+                return ShowImageDialog(
                   title: widget.receipt.fileName,
                   image: file,
                 );

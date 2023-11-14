@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easymoney/utils/file_operations.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -41,7 +42,7 @@ class ProviderReceipts with ChangeNotifier {
     required XFile file,
     required int profileId,
   }) async {
-    if (!file.name.endsWith('.jpg')) {
+    if (!isAcceptedType(Receipt.acceptedFileTypes, file.name)) {
       throw Exception('Wrong file format');
     }
     final id = DateTime.now().millisecondsSinceEpoch;
